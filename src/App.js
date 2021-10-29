@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react';
+import { useCookies } from 'react-cookie';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import Home from './pages/Home';
+import LogIn from './pages/LogIn';
+import UserContext from './UserContext';
 
 function App() {
+  const [cookies] = useCookies();
+  const [user, setUser] = useState(cookies.token ? {token: cookies.token} : null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={{
+      user,
+      setUser
+    }}>
+      <Router>
+        <Switch>
+          <Route path="/login" component={LogIn} />
+          <Route path="/" component={Home} />
+        </Switch>
+      </Router>
+    </UserContext.Provider>
   );
 }
 
